@@ -1,46 +1,69 @@
+// // BONUS
+// // ! NB Chrome retrieves voices asynchronously
+// let voices = []
+//
+// // the speechSynthesis.getVoices() array starts off empty when page is first loaded.
+// // The web speech API at some point populates this. When it's updated (async), the event voiceschanged fires.
+// // we're hooking it to that event to retrieve list of voices.
+// speechSynthesis.onvoiceschanged = function () {
+//     voices = speechSynthesis.getVoices()
+//     console.log(voices) // toggle this to show available voices.
+// }
+
+// query the page for elements
 const textArea = document.querySelector('textarea')
 const playButton = document.querySelector('button')
-cosnt pitchBar = document.querySelector('input')
+const pitchBar = document.querySelector('input')
 const duckFigure = document.querySelector('figure')
-//console.log(textarea) //to test out look at chrome
 
-//get text from he text area user entered
-//make the duck say those wordds when play is clicked
 
-function onButtonClick() {
-  //console.log("test")
-  //console.log(textArea.value)
-  //console.log(textArea.value.length)
-  if (textArea.value.length > 0) {
-    speak()
-  }  
-}
+// Control what happens when button is clicked
+// When clicked, check if there is text in the input field
+playButton.addEventListener('click', function () {
+    const textLength = textArea.value.trim().length
+    if (textLength > 0) {
+        speak()
+    }
+})
 
+// Function to make the duck talk!
 function speak() {
-  const text = textArea.value
-  
-  const utterance = new SpeechSynthesisUtterance(text)
-  
-  //must be between 0 and 2 ncheck mdn
-  utterance.pitch = pitchBar.value
-  
-  speechSynthesis.speak(utterance)
-  
-  utterance.addEventListener('start', function() {
-    playButton.disabled = true
-    textArea.disabled = true
-    pitchBar.disabled =true
-    duckFigure.classlist.add('talking')
-  }
-  
-  utterance.addEventListener('end', function() {
-    playButton.disabled = false
-    textArea.disabled = false
-    pitchBar.disabled = false
-    duckFigure.classlist.remove('talking')
-  }
-                             
-                             
-}
+    // Retrieve text and audio values
+    const text = textArea.value
+    const pitch = pitchBar.value
 
-playButton.addEventListener('click', onButtonClick)
+    // Initialiase a new utterance
+    const utterance = new SpeechSynthesisUtterance(text)
+
+    // utterance.volume = 1 // 0 - 1
+    // utterance.rate = 0.5; // 0.1 - 10
+
+    // set the pitch level
+    utterance.pitch = pitch // 0 - 2
+
+    // // BONUS: set the voice
+    // const voice = voices.find(item => item.name.includes("CHOOSE ONE!"))
+    // console.log(voices, voice)
+    //
+    // utterance.voice = voice;
+
+
+    // Make the duck talk
+    speechSynthesis.speak(utterance)
+
+    // When the duck begins to speak...
+    utterance.addEventListener('start', function () {
+        textArea.disabled = true
+        pitchBar.disabled = true
+        playButton.disabled = true
+        duckFigure.classList.add('talking')
+    })
+
+    // When the duck has finished...
+    utterance.addEventListener('end', function () {
+        textArea.disabled = false
+        pitchBar.disabled = false
+        playButton.disabled = false
+        duckFigure.classList.remove('talking')
+    })
+}
