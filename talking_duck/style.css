@@ -101,10 +101,18 @@ label {
 
 /* # TALKING CLASS */
 
-.talking .static-duck {
+.talking .static-swan {
   display: none;
 }
 
-.talking .animated-duck {
+.talking .animated-swan {
+  display: block;
+}
+
+.talking_code .static-swan {
+  display: none;
+}
+
+.talking_code .animated-swan-code {
   display: block;
 }
